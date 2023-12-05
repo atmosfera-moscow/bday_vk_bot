@@ -58,7 +58,7 @@ async function main() {
 
         let text = ''
         for (const [id_vk, value] of people) {
-          text += `@id${id_vk}(${value[0]}), `
+          text += `@id${id_vk}(${value[0]} ${value[3]}), `
         }
         text = text.slice(0, -2).replace(/,\s([^,]+)$/, ' и $1')
         text += await getCongText(sex, curChat)

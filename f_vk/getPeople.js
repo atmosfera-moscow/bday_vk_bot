@@ -50,7 +50,7 @@ export default async (today_day, chat, today_date) => {
     let bday = user.bdate.split('.')[0] + '.' + user.bdate.split('.')[1]
     if (today_day === bday) {
       let sex = user.sex === 2 ? 'male' : 'female'
-      people.set(user.id, [user.first_name, sex, user.screen_name])
+      people.set(user.id, [user.first_name, sex, user.screen_name, user.last_name])
     }
   }
   console.log(`Найдено в ${chat.chat_id_in_group} ${people.size} людей c ДР`)
