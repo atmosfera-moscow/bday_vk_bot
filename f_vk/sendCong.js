@@ -21,7 +21,7 @@ export default async (chat, text, attachment) => {
           {
             action: {
               type: 'text',
-              label: "test",
+              label: 'test',
               payload: { command: 'congr' },
             },
             color: 'positive',

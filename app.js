@@ -40,33 +40,37 @@ async function main() {
       console.log('Сайчас можно поздравлять')
 
       for (const curChat of await getChats()) {
-        console.log('\nРаботаем с: ', curChat.organization)
-        if (curChat.disable_flag) {
-          console.log('\n', curChat.organization, 'disabled')
-          continue
+        try {
+          console.log('\nРаботаем с: ', curChat.organization)
+          if (curChat.disable_flag) {
+            console.log('\n', curChat.organization, 'disabled')
+            continue
+          }
+
+          const people = await getPeople(dateStr, curChat, time)
+          if (people.size === 0) {
+            console.log('Сегодня нет ДР(')
+            continue
+          }
+
+          console.log('ДР у: ', people.values())
+
+          let sex = people.size === 1 ? people.values().next().value[1] : 'plural'
+
+          let text = ''
+          for (const [id_vk, value] of people) {
+            text += `@id${id_vk}(${value[0]} ${value[3]}), `
+          }
+          text = text.slice(0, -2).replace(/,\s([^,]+)$/, ' и $1')
+          text += await getCongText(sex, curChat)
+
+          let attachment = await getCongAttachment(curChat)
+
+          console.log(`Отправили поздравление: text=${text}, attachment=${attachment}`)
+          await sendCong(curChat, text, attachment)
+        } catch (err) {
+          console.log(`Ошибка в цикле в getChats curChat=${curChat} ${err}`)
         }
-
-        const people = await getPeople(dateStr, curChat, time)
-        if (people.size === 0) {
-          console.log('Сегодня нет ДР(')
-          continue
-        }
-
-        console.log('ДР у: ', people.values())
-
-        let sex = people.size === 1 ? people.values().next().value[1] : 'plural'
-
-        let text = ''
-        for (const [id_vk, value] of people) {
-          text += `@id${id_vk}(${value[0]} ${value[3]}), `
-        }
-        text = text.slice(0, -2).replace(/,\s([^,]+)$/, ' и $1')
-        text += await getCongText(sex, curChat)
-
-        let attachment = await getCongAttachment(curChat)
-
-        console.log(`Отправили поздравление: text=${text}, attachment=${attachment}`)
-        await sendCong(curChat, text, attachment)
       }
       if (NODE_ENV === 'production') {
         await addDayDB(fullDateStr)
