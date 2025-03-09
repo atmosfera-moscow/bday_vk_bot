@@ -17,6 +17,7 @@ export default async (today_day, chat, today_date) => {
       peer_id: chat.chat_id_in_group,
       fields: 'bdate, sex, screen_name, last_seen',
       group_id: chat.group_id,
+      lang: 0,
     })
 
     // console.log({ res });
